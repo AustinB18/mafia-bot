@@ -1,2 +1,3 @@
-scopes = ['identity', 'submit']
-user_agent = ('Script for a text based game of Mafia, using reddit as a platform (v0.0 by /u/TomVenn & /u/austin_18)')
+scopes = ['identity', 'submit', 'read', 'modposts', 'privatemessages']
+user_agent = 'MafiaBot written to host the party game MAFIA'\
+    ' (by /u/TomVenn and /u/austin_18)'
