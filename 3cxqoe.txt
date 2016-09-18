@@ -1,0 +1,17 @@
+
+0
+godfather,mafioso,sheriff,sheriff,doctor,doctor,sk
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0,0,0,0,0,0,0,0,0,0

@@ -1,0 +1,57 @@
+sheriff
+doctor
+investigator
+citizen
+godfather
+mafioso
+mafioso
+serial killer
+
+
+
+
+#the following is code. copy and paste into MafiaBot.py and then delete from "serial killer" down.
+
+
+
+standardGame = open("StandardGame.txt", "r+")  #file where standard game roles are stored
+roleList = []
+
+
+def initRoleList():
+	roleList = standardGame.readlines() #initializes the roleList to roles in file
+	print(roleList)
+
+
+
+
+******************************************
+****           END OF CODE           *****
+******************************************
+
+
+
+
+*************************************
+****           THEORY           *****
+*************************************
+
+
+Lets say that after a new thread is created, to join a game someone must comment: /u/MafiaBot !Join
+
+
+keywordJoin = ['/u/MafiaBot !Join']
+playerList = []
+
+def fillRoles():
+	while playerLimit < numOfRoles:
+	
+		for comment in praw.helpers.comment_stream(r, RedditBotMafiaTest, verbosity=1) #probably need to find a way to only stream the comments in the thread, not whole subreddit
+	
+			player_join = any(string in comment.body.lower() for string in keywordJoin)
+			
+			if comment in player_join and comment.author not in playerList
+				
+				playerList.append(comment.author)
+				playerLimit+=1
+		 	
