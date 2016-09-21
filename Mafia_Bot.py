@@ -1,36 +1,25 @@
 #!/usr/bin/env python
+import time
+import random
+from random import shuffle
 
 import praw
-from prawoauth2 import PrawOAuth2Mini
 
-from tokens import app_key, app_secret, access_token, refresh_token
-from settings import scopes, user_agent
+import OAuth2Util
+from settings import user_agent
 
-reddit_client = praw.Reddit(user_agent=user_agent)
-oauth_helper = PrawOAuth2Mini(reddit_client, app_key=app_key,
-                              app_secret=app_secret, access_token=access_token,
-                              scopes=scopes, refresh_token=refresh_token)
+r = praw.Reddit(user_agent)
+o = OAuth2Util.OAuth2Util(r)
 
-# oauth_helper.refresh() will be used to update the tokens
-#   it will check automatically whether they are expired or not
-#
-############################################
-#
-#try:
-#    oauth_helper.refresh()
-#    some_reddit_related_op()
-#except praw.errors.OAuthInvalidToken:
-#    oauth_helper.refresh()
-#
-############################################
-#
-# code above is and example of how to use the refresh command
-#
-#       oauth_helper.refresh(force=True)
-# above line will force the tokes to be refreshed, even if they haven't expired
-
+print("Logging in....\n")
+o.refresh(force=True)
 print("Logged in!\n")
-print("loading game data...\n")
+
+print("Connecting to subreddit...\n")
+subreddit = r.get_subreddit('RedditBotMafiaTest')
+print("Connected to r/RedditBotMafiaTest!")
+
+print("Loading game data...\n")
 gameData = open("data.txt", "r+") #File where games are stored
 gameIDList = [] #List of ongoing mafia games (thread ids)
 gameList = [] #List of Game objects
@@ -108,7 +97,6 @@ class Game: #I created this object because I think it will make it easier to sto
         saveFile.close()
 
 def initGameList():
-    oauth_helper.refresh()
     for line in gameData:#Initialize the gameList to whatever is in data.txt
         gameIDList.append(line.rstrip())
     for ID in gameIDList:
@@ -117,7 +105,6 @@ def initGameList():
         gameList.append(newGameObject)
 
 def updateGameList():
-    oauth_helper.refresh()
     submissions = subreddit.get_hot()
     for sub in submissions:
         if sub.id not in gameIDList and sub.title.find("!") != -1: #Checks that the game isn't already in the gameList and that the submisison has a "!" in the title 
@@ -130,7 +117,6 @@ def updateGameList():
 
 
 def processGames():
-    oauth_helper.refresh()
     for game in gameList:
         if game.started[0] == '0':
             submission = r.get_submission(submission_id=game.threadID)
@@ -192,7 +178,6 @@ def checkForUsername(game,comment):
             return game.playerList.index(player)
 
 def processPM():
-    oauth_helper.refresh()
     for msg in r.get_unread():
         user = msg.author
         for game in gameList:
@@ -219,7 +204,6 @@ def processPM():
 
 #  NEW  : pm's the players their roles, *also accepts the game object as a parameter
 def pmPlayers(game):
-    oauth_helper.refresh()
     i = 0
     print("Messaging players their roles.....\n")
     while i < maxPlayers: 
@@ -231,7 +215,7 @@ def pmPlayers(game):
 
 
 
-oauth_helper.refresh()
+
 initGameList()
 choice = 1
 
